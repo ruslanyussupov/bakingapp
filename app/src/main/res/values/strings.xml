@@ -1,3 +1,11 @@
 <resources>
+
     <string name="app_name">Baking App</string>
+    <string name="ingredients_label">Ingredients:</string>
+    <string name="steps_label">Steps:</string>
+    <string name="default_recipe_name">Recipe Without Name</string>
+    <string name="default_step_name">No Title</string>
+    <string name="ingredient">%s - %s %s \n</string>
+    <string name="ingredient_without_measure">%s \n</string>
+
 </resources>
