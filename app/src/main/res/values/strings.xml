@@ -8,4 +8,12 @@
     <string name="ingredient">%s - %s %s \n</string>
     <string name="ingredient_without_measure">%s \n</string>
 
+    <string name="no_internet_connection_state">No internet connection…</string>
+    <string name="no_recipes_state">No recipes…</string>
+    <string name="no_ingredients_state">No ingredients…</string>
+    <string name="no_steps_state">No steps…</string>
+
+    <string name="previous_step">Previous Step</string>
+    <string name="next_step">Next Step</string>
+
 </resources>

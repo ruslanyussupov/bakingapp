@@ -7,12 +7,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.ruslaniusupov.android.bakingapp.adapters.RecipesAdapter;
 import com.ruslaniusupov.android.bakingapp.loaders.RecipesLoader;
@@ -28,21 +30,27 @@ import butterknife.ButterKnife;
 public class RecipeListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<List<Recipe>>, RecipesAdapter.OnRecipeClickListener {
 
-    private static final String LOG_TAG = RecipeListFragment.class.getSimpleName();
     private static final int RECIPES_LOADER_ID = 1;
     private static final String BUNDLE_RECIPES = "recipes";
+    private static final int GRID_ROWS = 3;
     public static final String EXTRA_RECIPE = "recipe";
 
     private List<Recipe> mRecipes;
     private RecipesAdapter mAdapter;
+    private boolean mTabLayout;
 
     @BindView(R.id.recipes_rv)RecyclerView mRecipesRv;
+    @BindView(R.id.state_tv)TextView mStateTv;
+    @BindView(R.id.loading_pb)ProgressBar mLoadingPb;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_recipe_list, container, false);
+
+        View tabLayout = rootView.findViewById(R.id.tab_layout);
+        mTabLayout = tabLayout != null && tabLayout.getVisibility() == View.VISIBLE;
 
         ButterKnife.bind(this, rootView);
 
@@ -55,7 +63,12 @@ public class RecipeListFragment extends Fragment implements
 
         mAdapter = new RecipesAdapter(null, this);
         mRecipesRv.setAdapter(mAdapter);
-        mRecipesRv.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        if (mTabLayout) {
+            mRecipesRv.setLayoutManager(new GridLayoutManager(getActivity(), GRID_ROWS));
+        } else {
+            mRecipesRv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        }
 
         if (savedInstanceState == null) {
 
@@ -79,8 +92,15 @@ public class RecipeListFragment extends Fragment implements
             mRecipes = savedInstanceState.getParcelableArrayList(BUNDLE_RECIPES);
 
             if (mRecipes == null) {
-                showEmptyState();
+
+                if (NetworkUtils.hasNetworkConnection(getActivity())) {
+                    showEmptyState();
+                } else {
+                    showNoNetworkConnectionState();
+                }
+
             } else {
+                mRecipesRv.setVisibility(View.VISIBLE);
                 mAdapter.swapData(mRecipes);
             }
 
@@ -96,19 +116,23 @@ public class RecipeListFragment extends Fragment implements
 
     @Override
     public Loader<List<Recipe>> onCreateLoader(int id, Bundle args) {
+
+        mLoadingPb.setVisibility(View.VISIBLE);
+
         return new RecipesLoader(getActivity(), NetworkUtils.JSON_URL);
     }
 
     @Override
     public void onLoadFinished(Loader<List<Recipe>> loader, List<Recipe> data) {
 
+        mLoadingPb.setVisibility(View.GONE);
+
         if (data == null || data.size() == 0) {
             showEmptyState();
             return;
         }
 
-        Log.d(LOG_TAG, "Number of recipes: " + data.size());
-
+        mRecipesRv.setVisibility(View.VISIBLE);
         mRecipes = data;
         mAdapter.swapData(data);
 
@@ -120,11 +144,17 @@ public class RecipeListFragment extends Fragment implements
     }
 
     private void showEmptyState() {
-
+        mRecipesRv.setVisibility(View.GONE);
+        mLoadingPb.setVisibility(View.GONE);
+        mStateTv.setVisibility(View.VISIBLE);
+        mStateTv.setText(R.string.no_recipes_state);
     }
 
     private void showNoNetworkConnectionState() {
-
+        mRecipesRv.setVisibility(View.GONE);
+        mLoadingPb.setVisibility(View.GONE);
+        mStateTv.setVisibility(View.VISIBLE);
+        mStateTv.setText(R.string.no_internet_connection_state);
     }
 
     @Override
