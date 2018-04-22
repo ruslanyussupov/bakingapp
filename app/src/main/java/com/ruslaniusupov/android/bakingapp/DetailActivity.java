@@ -31,9 +31,9 @@ public class DetailActivity extends AppCompatActivity implements StepsAdapter.On
         if (savedInstanceState == null) {
 
             Intent intent = getIntent();
-            if (intent.hasExtra(RecipeListFragment.EXTRA_RECIPE)) {
+            if (intent.hasExtra(MainActivity.EXTRA_RECIPE)) {
 
-                mRecipe = intent.getParcelableExtra(RecipeListFragment.EXTRA_RECIPE);
+                mRecipe = intent.getParcelableExtra(MainActivity.EXTRA_RECIPE);
 
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.recipe_detail_container, RecipeDetailFragment.create(mRecipe))

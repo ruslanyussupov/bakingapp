@@ -1,7 +1,7 @@
 package com.ruslaniusupov.android.bakingapp;
 
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,21 +27,31 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecipeListFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<List<Recipe>>, RecipesAdapter.OnRecipeClickListener {
+import static com.ruslaniusupov.android.bakingapp.adapters.RecipesAdapter.*;
 
-    private static final int RECIPES_LOADER_ID = 1;
+public class RecipeListFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<List<Recipe>> {
+
     private static final String BUNDLE_RECIPES = "recipes";
+    private static final int RECIPES_LOADER_ID = 1;
     private static final int GRID_ROWS = 3;
-    public static final String EXTRA_RECIPE = "recipe";
 
     private List<Recipe> mRecipes;
     private RecipesAdapter mAdapter;
     private boolean mTabLayout;
+    private OnRecipeClickListener mRecipeClickListener;
 
     @BindView(R.id.recipes_rv)RecyclerView mRecipesRv;
     @BindView(R.id.state_tv)TextView mStateTv;
     @BindView(R.id.loading_pb)ProgressBar mLoadingPb;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnRecipeClickListener) {
+            mRecipeClickListener = (OnRecipeClickListener) context;
+        }
+    }
 
     @Nullable
     @Override
@@ -61,7 +71,7 @@ public class RecipeListFragment extends Fragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAdapter = new RecipesAdapter(null, this);
+        mAdapter = new RecipesAdapter(null, mRecipeClickListener);
         mRecipesRv.setAdapter(mAdapter);
 
         if (mTabLayout) {
@@ -155,13 +165,6 @@ public class RecipeListFragment extends Fragment implements
         mLoadingPb.setVisibility(View.GONE);
         mStateTv.setVisibility(View.VISIBLE);
         mStateTv.setText(R.string.no_internet_connection_state);
-    }
-
-    @Override
-    public void onRecipeClick(Recipe recipe) {
-        Intent openRecipeDetail = new Intent(getActivity(), DetailActivity.class);
-        openRecipeDetail.putExtra(EXTRA_RECIPE, recipe);
-        startActivity(openRecipeDetail);
     }
 
 }

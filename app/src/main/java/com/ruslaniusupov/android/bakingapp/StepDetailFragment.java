@@ -2,7 +2,6 @@ package com.ruslaniusupov.android.bakingapp;
 
 
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -41,7 +39,7 @@ import com.ruslaniusupov.android.bakingapp.models.Step;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StepDetailFragment extends Fragment implements ExoPlayer.EventListener {
+public class StepDetailFragment extends Fragment implements Player.EventListener {
 
     private static final String LOG_TAG = StepDetailFragment.class.getSimpleName();
     private static final String BUNDLE_STEP = "step";

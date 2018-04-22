@@ -25,6 +25,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.ruslaniusupov.android.bakingapp.adapters.StepsAdapter.*;
+
 public class RecipeDetailFragment extends Fragment {
 
     private static final String BUNDLE_RECIPE = "recipe";
@@ -34,7 +36,7 @@ public class RecipeDetailFragment extends Fragment {
     private StepsAdapter mAdapter;
     private List<Ingredient> mIngredients;
     private List<Step> mSteps;
-    private StepsAdapter.OnStepClickListener mStepClickListener;
+    private OnStepClickListener mStepClickListener;
 
     @BindView(R.id.ingredients_tv)TextView mIngredientsTv;
     @BindView(R.id.steps_rv)RecyclerView mStepsRv;
@@ -43,8 +45,8 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof StepsAdapter.OnStepClickListener) {
-            mStepClickListener = (StepsAdapter.OnStepClickListener) context;
+        if (context instanceof OnStepClickListener) {
+            mStepClickListener = (OnStepClickListener) context;
         }
 
     }
