@@ -29,7 +29,9 @@ public class WidgetConfigActivity extends AppCompatActivity implements RecipesAd
         mWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
 
-
+        Intent resultValue = new Intent();
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId);
+        setResult(RESULT_CANCELED, resultValue);
 
     }
 
@@ -55,6 +57,8 @@ public class WidgetConfigActivity extends AppCompatActivity implements RecipesAd
 
                 ContentValues ingredientCv = new ContentValues();
 
+                Log.d(LOG_TAG, ingredient.getName());
+
                 ingredientCv.put(WidgetContract.IngredientEntry.COLUMN_WIDGET_ID, mWidgetId);
                 ingredientCv.put(WidgetContract.IngredientEntry.COLUMN_INGREDIENT_NAME,
                         ingredient.getName());
@@ -68,6 +72,10 @@ public class WidgetConfigActivity extends AppCompatActivity implements RecipesAd
             }
 
         }
+
+        Intent resultValue = new Intent();
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId);
+        setResult(RESULT_OK, resultValue);
 
         RecipeWidgetProvider.updateWidget(this, AppWidgetManager.getInstance(this), mWidgetId);
 

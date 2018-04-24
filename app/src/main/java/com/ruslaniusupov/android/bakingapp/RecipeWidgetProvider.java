@@ -56,10 +56,14 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         view.setEmptyView(R.id.ingredients_lv, R.id.emptyView);
 
         appWidgetManager.updateAppWidget(widgetId, view);
+        appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.ingredients_lv);
     }
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
+
+        Log.d(LOG_TAG, "onDeleted");
+
         super.onDeleted(context, appWidgetIds);
 
         for (int widgetId : appWidgetIds) {

@@ -7,5 +7,4 @@
     android:configure="com.ruslaniusupov.android.bakingapp.WidgetConfigActivity"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen">
-
 </appwidget-provider>
