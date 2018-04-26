@@ -1,4 +1,4 @@
-package com.ruslaniusupov.android.bakingapp;
+package com.ruslaniusupov.android.bakingapp.ui.fragments;
 
 
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ruslaniusupov.android.bakingapp.R;
 import com.ruslaniusupov.android.bakingapp.adapters.StepsAdapter;
 import com.ruslaniusupov.android.bakingapp.models.Ingredient;
 import com.ruslaniusupov.android.bakingapp.models.Recipe;

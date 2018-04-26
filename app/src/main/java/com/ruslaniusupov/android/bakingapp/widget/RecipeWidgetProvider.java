@@ -1,16 +1,21 @@
-package com.ruslaniusupov.android.bakingapp;
+package com.ruslaniusupov.android.bakingapp.widget;
 
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.ruslaniusupov.android.bakingapp.R;
 import com.ruslaniusupov.android.bakingapp.db.WidgetContract;
+import com.ruslaniusupov.android.bakingapp.models.Recipe;
+import com.ruslaniusupov.android.bakingapp.ui.DetailActivity;
+import com.ruslaniusupov.android.bakingapp.utils.DbUtils;
+
 
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
@@ -27,27 +32,20 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     }
 
-    static void updateWidget(Context context, AppWidgetManager appWidgetManager, int widgetId) {
+    public static void updateWidget(Context context, AppWidgetManager appWidgetManager, int widgetId) {
+
+        Recipe recipe = DbUtils.queryRecipe(context, widgetId);
 
         RemoteViews view = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
 
-        String recipeName = context.getString(R.string.default_recipe_name);
+        view.setTextViewText(R.id.recipe_title, recipe.getName());
 
-        Cursor cursor = context.getContentResolver().query(WidgetContract.RecipeEntry.CONTENT_URI,
-                new String[]{WidgetContract.RecipeEntry.COLUMN_RECIPE_NAME},
-                WidgetContract.RecipeEntry.COLUMN_WIDGET_ID + "=?",
-                new String[]{String.valueOf(widgetId)},
-                null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            recipeName = cursor.getString(cursor.getColumnIndex(
-                    WidgetContract.RecipeEntry.COLUMN_RECIPE_NAME));
-            cursor.close();
-        }
-
-        Log.d(LOG_TAG, recipeName);
-
-        view.setTextViewText(R.id.recipe_title, recipeName);
+        Intent recipeDetail = new Intent(context, DetailActivity.class);
+        recipeDetail.putExtra(DetailActivity.EXTRA_RECIPE, recipe);
+        recipeDetail.setData(Uri.parse(recipeDetail.toUri(Intent.URI_INTENT_SCHEME)));
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+                recipeDetail, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.recipe_title, pendingIntent);
 
         Intent widgetService = new Intent(context, RecipeWidgetService.class);
         widgetService.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
@@ -56,7 +54,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         view.setEmptyView(R.id.ingredients_lv, R.id.emptyView);
 
         appWidgetManager.updateAppWidget(widgetId, view);
-        appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.ingredients_lv);
+
     }
 
     @Override

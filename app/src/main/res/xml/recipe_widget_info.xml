@@ -4,7 +4,7 @@
     android:minWidth="180dp"
     android:minHeight="110dp"
     android:initialLayout="@layout/recipe_widget"
-    android:configure="com.ruslaniusupov.android.bakingapp.WidgetConfigActivity"
+    android:configure="com.ruslaniusupov.android.bakingapp.ui.WidgetConfigActivity"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen">
 </appwidget-provider>

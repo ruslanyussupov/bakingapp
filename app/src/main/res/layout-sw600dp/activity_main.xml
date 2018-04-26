@@ -7,12 +7,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
 
     <fragment
         android:id="@+id/recipes_list_fragment"
-        android:name="com.ruslaniusupov.android.bakingapp.RecipeListFragment"
+        android:name="com.ruslaniusupov.android.bakingapp.ui.fragments.RecipeListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

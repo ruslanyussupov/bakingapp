@@ -1,12 +1,13 @@
-package com.ruslaniusupov.android.bakingapp;
+package com.ruslaniusupov.android.bakingapp.ui;
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 
+import com.ruslaniusupov.android.bakingapp.R;
 import com.ruslaniusupov.android.bakingapp.models.Step;
+import com.ruslaniusupov.android.bakingapp.ui.fragments.StepDetailFragment;
 
 import java.util.ArrayList;
 import java.util.List;

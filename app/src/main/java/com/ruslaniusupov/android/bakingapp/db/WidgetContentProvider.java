@@ -17,6 +17,8 @@ public class WidgetContentProvider extends ContentProvider {
     private static final int RECIPE_ID = 101;
     private static final int INGREDIENT = 200;
     private static final int INGREDIENT_ID = 201;
+    private static final int STEP = 300;
+    private static final int STEP_ID = 301;
 
     private WidgetDbHelper mWidgetDbHelper;
     private static UriMatcher sUriMatcher = buildUriMatcher();
@@ -76,6 +78,25 @@ public class WidgetContentProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
+            case STEP:
+                cursor = db.query(WidgetContract.StepEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            case STEP_ID:
+                id = ContentUris.parseId(uri);
+                cursor = db.query(WidgetContract.StepEntry.TABLE_NAME,
+                        projection,
+                        WidgetContract.StepEntry._ID + "=?",
+                        new String[]{String.valueOf(id)},
+                        null,
+                        null,
+                        sortOrder);
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported uri: " + uri);
 
@@ -100,6 +121,10 @@ public class WidgetContentProvider extends ContentProvider {
                 return WidgetContract.IngredientEntry.CONTENT_TYPE;
             case INGREDIENT_ID:
                 return WidgetContract.IngredientEntry.CONTENT_ITEM_TYPE;
+            case STEP:
+                return WidgetContract.StepEntry.CONTENT_TYPE;
+            case STEP_ID:
+                return WidgetContract.StepEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unsupported uri: " + uri);
 
@@ -127,6 +152,12 @@ public class WidgetContentProvider extends ContentProvider {
                 rowId = db.insert(WidgetContract.IngredientEntry.TABLE_NAME, null, values);
                 if (rowId > 0) {
                     retUri = WidgetContract.IngredientEntry.buildIngredientUri(rowId);
+                }
+                break;
+            case STEP:
+                rowId = db.insert(WidgetContract.StepEntry.TABLE_NAME, null, values);
+                if (rowId > 0) {
+                    retUri = WidgetContract.StepEntry.buildStepUri(rowId);
                 }
                 break;
             default:
@@ -168,6 +199,16 @@ public class WidgetContentProvider extends ContentProvider {
                 id = ContentUris.parseId(uri);
                 rowsDeleted = db.delete(WidgetContract.IngredientEntry.TABLE_NAME,
                         WidgetContract.IngredientEntry._ID + "=?",
+                        new String[]{String.valueOf(id)});
+                break;
+            case STEP:
+                rowsDeleted = db.delete(WidgetContract.StepEntry.TABLE_NAME,
+                        selection, selectionArgs);
+                break;
+            case STEP_ID:
+                id = ContentUris.parseId(uri);
+                rowsDeleted = db.delete(WidgetContract.StepEntry.TABLE_NAME,
+                        WidgetContract.StepEntry._ID + "=?",
                         new String[]{String.valueOf(id)});
                 break;
             default:
@@ -214,6 +255,17 @@ public class WidgetContentProvider extends ContentProvider {
                         WidgetContract.IngredientEntry._ID + "=?",
                         new String[]{String.valueOf(id)});
                 break;
+            case STEP:
+                rowsUpdated = db.update(WidgetContract.StepEntry.TABLE_NAME,
+                        values, selection, selectionArgs);
+                break;
+            case STEP_ID:
+                id = ContentUris.parseId(uri);
+                rowsUpdated = db.update(WidgetContract.StepEntry.TABLE_NAME,
+                        values,
+                        WidgetContract.StepEntry._ID + "=?",
+                        new String[]{String.valueOf(id)});
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported uri: " + uri);
 
@@ -235,6 +287,9 @@ public class WidgetContentProvider extends ContentProvider {
         matcher.addURI(WidgetContract.CONTENT_AUTHORITY, WidgetContract.PATH_INGREDIENT, INGREDIENT);
         matcher.addURI(WidgetContract.CONTENT_AUTHORITY, WidgetContract.PATH_INGREDIENT + "/#",
                 INGREDIENT_ID);
+        matcher.addURI(WidgetContract.CONTENT_AUTHORITY, WidgetContract.PATH_STEP, STEP);
+        matcher.addURI(WidgetContract.CONTENT_AUTHORITY, WidgetContract.PATH_STEP + "/#",
+                STEP_ID);
 
         return matcher;
     }

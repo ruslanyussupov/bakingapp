@@ -1,4 +1,4 @@
-package com.ruslaniusupov.android.bakingapp;
+package com.ruslaniusupov.android.bakingapp.ui.fragments;
 
 
 import android.net.Uri;
@@ -33,6 +33,7 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.ruslaniusupov.android.bakingapp.R;
 import com.ruslaniusupov.android.bakingapp.models.Step;
 
 

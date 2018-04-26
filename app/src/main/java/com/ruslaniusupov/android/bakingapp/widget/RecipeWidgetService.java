@@ -1,4 +1,4 @@
-package com.ruslaniusupov.android.bakingapp;
+package com.ruslaniusupov.android.bakingapp.widget;
 
 
 import android.appwidget.AppWidgetManager;
@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.ruslaniusupov.android.bakingapp.R;
 import com.ruslaniusupov.android.bakingapp.db.WidgetContract;
 
 

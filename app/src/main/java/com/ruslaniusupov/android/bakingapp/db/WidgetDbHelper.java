@@ -20,6 +20,7 @@ public class WidgetDbHelper extends SQLiteOpenHelper {
         String CREATE_RECIPE_TABLE = "CREATE TABLE " + WidgetContract.RecipeEntry.TABLE_NAME + " ("
                 + WidgetContract.RecipeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + WidgetContract.RecipeEntry.COLUMN_WIDGET_ID + " INTEGER NOT NULL, "
+                + WidgetContract.RecipeEntry.COLUMN_RECIPE_ID + " INTEGER NOT NULL, "
                 + WidgetContract.RecipeEntry.COLUMN_RECIPE_NAME + " TEXT, "
                 + WidgetContract.RecipeEntry.COLUMN_RECIPE_SERVINGS + " INTEGER);";
 
@@ -30,8 +31,18 @@ public class WidgetDbHelper extends SQLiteOpenHelper {
                 + WidgetContract.IngredientEntry.COLUMN_QUANTITY + " INTEGER, "
                 + WidgetContract.IngredientEntry.COLUMN_MEASURE + " TEXT);";
 
+        String CREATE_STEP_TABLE = "CREATE TABLE " + WidgetContract.StepEntry.TABLE_NAME + " ("
+                + WidgetContract.StepEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + WidgetContract.StepEntry.COLUMN_WIDGET_ID + " INTEGER NOT NULL, "
+                + WidgetContract.StepEntry.COLUMN_STEP_ID + " INTEGER NOT NULL, "
+                + WidgetContract.StepEntry.COLUMN_SHORT_DESCRIPTION + " TEXT, "
+                + WidgetContract.StepEntry.COLUMN_DESCRIPTION + " TEXT, "
+                + WidgetContract.StepEntry.COLUMN_VIDEO_URL + " TEXT, "
+                + WidgetContract.StepEntry.COLUMN_THUMBNAIL_URL + " TEXT);";
+
         db.execSQL(CREATE_RECIPE_TABLE);
         db.execSQL(CREATE_INGREDIENT_TABLE);
+        db.execSQL(CREATE_STEP_TABLE);
 
     }
 

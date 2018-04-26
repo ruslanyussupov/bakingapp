@@ -1,19 +1,23 @@
-package com.ruslaniusupov.android.bakingapp;
+package com.ruslaniusupov.android.bakingapp.ui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.ruslaniusupov.android.bakingapp.R;
 import com.ruslaniusupov.android.bakingapp.adapters.StepsAdapter;
 import com.ruslaniusupov.android.bakingapp.models.Recipe;
 import com.ruslaniusupov.android.bakingapp.models.Step;
+import com.ruslaniusupov.android.bakingapp.ui.fragments.RecipeDetailFragment;
+import com.ruslaniusupov.android.bakingapp.ui.fragments.StepDetailFragment;
 
 import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity implements StepsAdapter.OnStepClickListener {
 
     private static final String BUNDLE_RECIPE = "recipe";
+    public static final String EXTRA_RECIPE = "recipe";
     public static final String EXTRA_STEPS = "steps";
     public static final String EXTRA_STEP_POSITION = "step_position";
 
@@ -31,9 +35,9 @@ public class DetailActivity extends AppCompatActivity implements StepsAdapter.On
         if (savedInstanceState == null) {
 
             Intent intent = getIntent();
-            if (intent.hasExtra(MainActivity.EXTRA_RECIPE)) {
+            if (intent.hasExtra(EXTRA_RECIPE)) {
 
-                mRecipe = intent.getParcelableExtra(MainActivity.EXTRA_RECIPE);
+                mRecipe = intent.getParcelableExtra(EXTRA_RECIPE);
 
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.recipe_detail_container, RecipeDetailFragment.create(mRecipe))

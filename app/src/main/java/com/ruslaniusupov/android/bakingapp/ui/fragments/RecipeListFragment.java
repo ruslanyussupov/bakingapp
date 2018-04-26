@@ -1,4 +1,4 @@
-package com.ruslaniusupov.android.bakingapp;
+package com.ruslaniusupov.android.bakingapp.ui.fragments;
 
 
 import android.content.Context;
@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ruslaniusupov.android.bakingapp.R;
 import com.ruslaniusupov.android.bakingapp.adapters.RecipesAdapter;
 import com.ruslaniusupov.android.bakingapp.loaders.RecipesLoader;
 import com.ruslaniusupov.android.bakingapp.models.Recipe;

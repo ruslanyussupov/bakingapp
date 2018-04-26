@@ -5,11 +5,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ruslaniusupov.android.bakingapp.WidgetConfigActivity">
+    tools:context="com.ruslaniusupov.android.bakingapp.ui.WidgetConfigActivity">
 
     <fragment
         android:id="@+id/recipes_list_fragment"
-        android:name="com.ruslaniusupov.android.bakingapp.RecipeListFragment"
+        android:name="com.ruslaniusupov.android.bakingapp.ui.fragments.RecipeListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
