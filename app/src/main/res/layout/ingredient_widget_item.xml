@@ -9,12 +9,8 @@
         android:id="@+id/ingredient_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingStart="16dp"
-        android:paddingRight="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="@dimen/ingredient_item_vertical_padding"
+        android:paddingBottom="@dimen/ingredient_item_vertical_padding"
         tools:text="unsalted butter, melted - 6 TBLSP"/>
 
 </FrameLayout>

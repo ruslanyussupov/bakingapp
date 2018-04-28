@@ -7,14 +7,13 @@
     android:layout_height="match_parent"
     tools:context="com.ruslaniusupov.android.bakingapp.ui.StepActivity">
 
-
     <FrameLayout
         android:id="@+id/step_detail_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/previous_step_btn"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/half_screen"
@@ -31,7 +30,7 @@
         android:text="@string/previous_step"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/half_screen"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/step_detail_container"/>
 
     <Button
         android:id="@+id/next_step_btn"
@@ -41,6 +40,6 @@
         android:text="@string/next_step"
         app:layout_constraintLeft_toRightOf="@id/half_screen"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/step_detail_container"/>
 
 </android.support.constraint.ConstraintLayout>

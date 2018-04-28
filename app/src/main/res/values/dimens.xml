@@ -3,5 +3,23 @@
 
     <dimen name="horizontal_padding">16dp</dimen>
     <dimen name="vertical_padding">16dp</dimen>
+    <dimen name="standard_padding">16dp</dimen>
+
+    <dimen name="vertical_margin">16dp</dimen>
+
+    <dimen name="button_margin">16dp</dimen>
+
+    <dimen name="num_of_steps_horizontal_margin">4dp</dimen>
+    <dimen name="num_of_ingredients_horizontal_margin">4dp</dimen>
+    <dimen name="steps_label_horizontal_margin">16dp</dimen>
+
+    <dimen name="recipe_item_vertical_padding">8dp</dimen>
+
+    <dimen name="step_item_vertical_padding">8dp</dimen>
+    <dimen name="step_item_horizontal_margin">8dp</dimen>
+
+    <dimen name="ingredient_item_vertical_padding">8dp</dimen>
+
+    <dimen name="detail_container_width">300dp</dimen>
 
 </resources>

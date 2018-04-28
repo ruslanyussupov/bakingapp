@@ -33,13 +33,13 @@ import static com.ruslaniusupov.android.bakingapp.adapters.RecipesAdapter.*;
 public class RecipeListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<List<Recipe>> {
 
+
     private static final String BUNDLE_RECIPES = "recipes";
     private static final int RECIPES_LOADER_ID = 1;
     private static final int GRID_ROWS = 3;
 
     private List<Recipe> mRecipes;
     private RecipesAdapter mAdapter;
-    private boolean mTabLayout;
     private OnRecipeClickListener mRecipeClickListener;
 
     @BindView(R.id.recipes_rv)RecyclerView mRecipesRv;
@@ -60,9 +60,6 @@ public class RecipeListFragment extends Fragment implements
 
         View rootView = inflater.inflate(R.layout.fragment_recipe_list, container, false);
 
-        View tabLayout = rootView.findViewById(R.id.tab_layout);
-        mTabLayout = tabLayout != null && tabLayout.getVisibility() == View.VISIBLE;
-
         ButterKnife.bind(this, rootView);
 
         return rootView;
@@ -72,14 +69,17 @@ public class RecipeListFragment extends Fragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAdapter = new RecipesAdapter(null, mRecipeClickListener);
-        mRecipesRv.setAdapter(mAdapter);
+        View tabLayout = getActivity().findViewById(R.id.tab_layout);
+        boolean isTab = tabLayout != null && tabLayout.getVisibility() == View.VISIBLE;
 
-        if (mTabLayout) {
+        if (isTab) {
             mRecipesRv.setLayoutManager(new GridLayoutManager(getActivity(), GRID_ROWS));
         } else {
             mRecipesRv.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
+
+        mAdapter = new RecipesAdapter(null, mRecipeClickListener);
+        mRecipesRv.setAdapter(mAdapter);
 
         if (savedInstanceState == null) {
 

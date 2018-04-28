@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.ruslaniusupov.android.bakingapp.R;
@@ -59,12 +60,7 @@ public class DetailActivity extends AppCompatActivity implements StepsAdapter.On
 
         }
 
-        if (mRecipe != null) {
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setTitle(mRecipe.getName());
-            }
-        }
+        setActionBarTitle(mRecipe.getName());
 
     }
 
@@ -92,6 +88,21 @@ public class DetailActivity extends AppCompatActivity implements StepsAdapter.On
             openStepActivity.putExtra(StepActivity.EXTRA_RECIPE_NAME, mRecipe.getName());
             startActivity(openStepActivity);
 
+        }
+
+    }
+
+    private void setActionBarTitle(String recipeName) {
+
+        String title = getString(R.string.default_recipe_name);
+
+        if (!TextUtils.isEmpty(recipeName)) {
+            title = recipeName;
+        }
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(title);
         }
 
     }

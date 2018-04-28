@@ -7,7 +7,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.ruslaniusupov.android.bakingapp.R;
@@ -19,7 +18,6 @@ import com.ruslaniusupov.android.bakingapp.utils.DbUtils;
 
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
-    private static final String LOG_TAG = RecipeWidgetProvider.class.getSimpleName();
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -40,6 +38,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
         view.setTextViewText(R.id.recipe_title, recipe.getName());
 
+        // Open recipe's detail activity when click in title
         Intent recipeDetail = new Intent(context, DetailActivity.class);
         recipeDetail.putExtra(DetailActivity.EXTRA_RECIPE, recipe);
         recipeDetail.setData(Uri.parse(recipeDetail.toUri(Intent.URI_INTENT_SCHEME)));
@@ -47,6 +46,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
                 recipeDetail, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.recipe_title, pendingIntent);
 
+        // Set adapter for list view
         Intent widgetService = new Intent(context, RecipeWidgetService.class);
         widgetService.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
         widgetService.setData(Uri.parse(widgetService.toUri(Intent.URI_INTENT_SCHEME)));
@@ -60,12 +60,11 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
 
-        Log.d(LOG_TAG, "onDeleted");
-
         super.onDeleted(context, appWidgetIds);
 
         for (int widgetId : appWidgetIds) {
 
+            // Delete associated with widget data from db
             context.getContentResolver().delete(WidgetContract.RecipeEntry.CONTENT_URI,
                     WidgetContract.RecipeEntry.COLUMN_WIDGET_ID + "=?",
                     new String[]{String.valueOf(widgetId)});

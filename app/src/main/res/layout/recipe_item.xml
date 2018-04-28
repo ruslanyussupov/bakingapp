@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:paddingTop="@dimen/recipe_item_vertical_padding"
+    android:paddingBottom="@dimen/recipe_item_vertical_padding">
 
     <TextView
         android:id="@+id/name_tv"
@@ -29,8 +30,8 @@
         android:id="@+id/num_of_ingredients"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginLeft="@dimen/num_of_ingredients_horizontal_margin"
+        android:layout_marginStart="@dimen/num_of_ingredients_horizontal_margin"
         tools:text="9"
         app:layout_constraintLeft_toRightOf="@id/num_of_ingredients_label"
         app:layout_constraintTop_toBottomOf="@id/name_tv"/>
@@ -39,8 +40,8 @@
         android:id="@+id/num_of_steps_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="@dimen/steps_label_horizontal_margin"
+        android:layout_marginStart="@dimen/steps_label_horizontal_margin"
         android:text="@string/steps_label"
         app:layout_constraintTop_toBottomOf="@id/name_tv"
         app:layout_constraintLeft_toRightOf="@id/num_of_ingredients"/>
@@ -49,11 +50,10 @@
         android:id="@+id/num_of_steps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginLeft="@dimen/num_of_steps_horizontal_margin"
+        android:layout_marginStart="@dimen/num_of_steps_horizontal_margin"
         tools:text="7"
         app:layout_constraintTop_toBottomOf="@id/name_tv"
         app:layout_constraintLeft_toRightOf="@id/num_of_steps_label"/>
-
 
 </android.support.constraint.ConstraintLayout>

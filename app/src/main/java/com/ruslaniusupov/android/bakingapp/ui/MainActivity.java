@@ -16,7 +16,6 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
     }
 
 

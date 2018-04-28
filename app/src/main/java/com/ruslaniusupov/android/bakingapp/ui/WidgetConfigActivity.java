@@ -1,27 +1,18 @@
 package com.ruslaniusupov.android.bakingapp.ui;
 
 import android.appwidget.AppWidgetManager;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.ruslaniusupov.android.bakingapp.R;
 import com.ruslaniusupov.android.bakingapp.adapters.RecipesAdapter;
-import com.ruslaniusupov.android.bakingapp.db.WidgetContract;
-import com.ruslaniusupov.android.bakingapp.models.Ingredient;
 import com.ruslaniusupov.android.bakingapp.models.Recipe;
-import com.ruslaniusupov.android.bakingapp.models.Step;
 import com.ruslaniusupov.android.bakingapp.utils.DbUtils;
 import com.ruslaniusupov.android.bakingapp.widget.RecipeWidgetProvider;
 
-import java.util.List;
 
 public class WidgetConfigActivity extends AppCompatActivity implements RecipesAdapter.OnRecipeClickListener {
-
-    private static final String LOG_TAG = WidgetConfigActivity.class.getSimpleName();
 
     private int mWidgetId;
 

@@ -18,8 +18,8 @@ import butterknife.ButterKnife;
 
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHolder> {
 
-    List<Step> mSteps;
-    OnStepClickListener mStepClickListener;
+    private List<Step> mSteps;
+    private OnStepClickListener mStepClickListener;
 
     public interface OnStepClickListener {
         void onStepClick(int position);

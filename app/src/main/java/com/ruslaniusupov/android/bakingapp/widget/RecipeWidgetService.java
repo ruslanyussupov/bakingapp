@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -14,8 +13,6 @@ import com.ruslaniusupov.android.bakingapp.db.WidgetContract;
 
 
 public class RecipeWidgetService extends RemoteViewsService {
-
-    private static final String LOG_TAG = RecipeWidgetService.class.getSimpleName();
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -36,13 +33,11 @@ public class RecipeWidgetService extends RemoteViewsService {
 
         @Override
         public void onCreate() {
-            Log.d(LOG_TAG, "onCreate");
+
         }
 
         @Override
         public void onDataSetChanged() {
-
-            Log.d(LOG_TAG, "onDataSetChanged");
 
             if (mCursor != null) {
                 mCursor.close();
@@ -58,24 +53,19 @@ public class RecipeWidgetService extends RemoteViewsService {
 
         @Override
         public void onDestroy() {
-            Log.d(LOG_TAG, "onDestroy");
             mCursor.close();
         }
 
         @Override
         public int getCount() {
             if (mCursor == null) {
-                Log.d(LOG_TAG, "Cursor is NULL");
                 return 0;
             }
-            Log.d(LOG_TAG, "Cursor size: " + mCursor.getCount());
             return mCursor.getCount();
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
-
-            Log.d(LOG_TAG, "getViewAt");
 
             RemoteViews view = new RemoteViews(mContext.getPackageName(), R.layout.ingredient_widget_item);
 
@@ -89,8 +79,6 @@ public class RecipeWidgetService extends RemoteViewsService {
                         WidgetContract.IngredientEntry.COLUMN_QUANTITY));
                 String measure = mCursor.getString(mCursor.getColumnIndex(
                         WidgetContract.IngredientEntry.COLUMN_MEASURE));
-
-                Log.d(LOG_TAG, name);
 
                 view.setTextViewText(R.id.ingredient_tv,
                         String.format(getString(R.string.ingredient_format_without_newline),

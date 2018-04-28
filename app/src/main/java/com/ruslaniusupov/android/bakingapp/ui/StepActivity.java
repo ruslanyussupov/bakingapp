@@ -1,9 +1,11 @@
 package com.ruslaniusupov.android.bakingapp.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import com.ruslaniusupov.android.bakingapp.R;
@@ -64,8 +66,6 @@ public class StepActivity extends AppCompatActivity {
                                 StepDetailFragment.create(mSteps.get(mStepPosition)))
                         .commit();
 
-                updateButtonsState();
-
             }
 
         } else {
@@ -76,9 +76,24 @@ public class StepActivity extends AppCompatActivity {
 
         }
 
+        updateButtonsState();
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(mRecipeName);
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Hide status bar and action bar in landscape mode
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            getSupportActionBar().hide();
         }
 
     }
@@ -94,10 +109,6 @@ public class StepActivity extends AppCompatActivity {
     @OnClick(R.id.previous_step_btn)
     public void previousStep() {
 
-        if (mSteps == null) {
-            return;
-        }
-
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_detail_container,
                         StepDetailFragment.create(mSteps.get(--mStepPosition)))
@@ -110,10 +121,6 @@ public class StepActivity extends AppCompatActivity {
     @OnClick(R.id.next_step_btn)
     public void nextStep() {
 
-        if (mSteps == null) {
-            return;
-        }
-
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.step_detail_container,
                         StepDetailFragment.create(mSteps.get(++mStepPosition)))
@@ -125,16 +132,16 @@ public class StepActivity extends AppCompatActivity {
 
     private void updateButtonsState() {
 
-        if (mSteps != null && mStepPosition > 0) {
-            mPreviousStepBtn.setEnabled(true);
-        } else {
+        if (mSteps == null || mStepPosition == 0) {
             mPreviousStepBtn.setEnabled(false);
+        } else {
+            mPreviousStepBtn.setEnabled(true);
         }
 
-        if (mSteps != null && mStepPosition < mSteps.size() - 1) {
-            mNextStepBtn.setEnabled(true);
-        } else {
+        if (mSteps == null || mStepPosition == mSteps.size() - 1) {
             mNextStepBtn.setEnabled(false);
+        } else {
+            mNextStepBtn.setEnabled(true);
         }
 
     }
