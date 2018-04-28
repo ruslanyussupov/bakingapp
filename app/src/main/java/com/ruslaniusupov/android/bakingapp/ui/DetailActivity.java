@@ -1,6 +1,7 @@
 package com.ruslaniusupov.android.bakingapp.ui;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,8 +19,6 @@ public class DetailActivity extends AppCompatActivity implements StepsAdapter.On
 
     private static final String BUNDLE_RECIPE = "recipe";
     public static final String EXTRA_RECIPE = "recipe";
-    public static final String EXTRA_STEPS = "steps";
-    public static final String EXTRA_STEP_POSITION = "step_position";
 
     private Recipe mRecipe;
     private boolean mTwoPane;
@@ -60,6 +59,13 @@ public class DetailActivity extends AppCompatActivity implements StepsAdapter.On
 
         }
 
+        if (mRecipe != null) {
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle(mRecipe.getName());
+            }
+        }
+
     }
 
     @Override
@@ -81,8 +87,9 @@ public class DetailActivity extends AppCompatActivity implements StepsAdapter.On
         } else {
 
             Intent openStepActivity = new Intent(this, StepActivity.class);
-            openStepActivity.putExtra(EXTRA_STEPS, (ArrayList<Step>) mRecipe.getSteps());
-            openStepActivity.putExtra(EXTRA_STEP_POSITION, position);
+            openStepActivity.putExtra(StepActivity.EXTRA_STEPS, (ArrayList<Step>) mRecipe.getSteps());
+            openStepActivity.putExtra(StepActivity.EXTRA_STEP_POSITION, position);
+            openStepActivity.putExtra(StepActivity.EXTRA_RECIPE_NAME, mRecipe.getName());
             startActivity(openStepActivity);
 
         }

@@ -1,6 +1,7 @@
 package com.ruslaniusupov.android.bakingapp.ui;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -20,9 +21,14 @@ public class StepActivity extends AppCompatActivity {
 
     private static final String BUNDLE_STEPS = "steps";
     private static final String BUNDLE_STEP_POSITION = "step_position";
+    private static final String BUNDLE_RECIPE_NAME = "recipe_name";
+    public static final String EXTRA_STEPS = "steps";
+    public static final String EXTRA_STEP_POSITION = "step_position";
+    public static final String EXTRA_RECIPE_NAME = "recipe_name";
 
     private List<Step> mSteps;
     private int mStepPosition;
+    private String mRecipeName;
 
     @BindView(R.id.previous_step_btn)Button mPreviousStepBtn;
     @BindView(R.id.next_step_btn)Button mNextStepBtn;
@@ -34,14 +40,20 @@ public class StepActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        mRecipeName = getString(R.string.default_recipe_name);
+
         if (savedInstanceState == null) {
 
             Intent intent = getIntent();
-            if (intent.hasExtra(DetailActivity.EXTRA_STEPS) &&
-                    intent.hasExtra(DetailActivity.EXTRA_STEP_POSITION)) {
+            if (intent.hasExtra(EXTRA_STEPS) &&
+                    intent.hasExtra(EXTRA_STEP_POSITION)) {
 
-                mSteps = intent.getParcelableArrayListExtra(DetailActivity.EXTRA_STEPS);
-                mStepPosition = intent.getIntExtra(DetailActivity.EXTRA_STEP_POSITION, 0);
+                mSteps = intent.getParcelableArrayListExtra(EXTRA_STEPS);
+                mStepPosition = intent.getIntExtra(EXTRA_STEP_POSITION, 0);
+
+                if (intent.hasExtra(EXTRA_RECIPE_NAME)) {
+                    mRecipeName = intent.getStringExtra(EXTRA_RECIPE_NAME);
+                }
 
                 if (mSteps == null) {
                     return;
@@ -60,7 +72,13 @@ public class StepActivity extends AppCompatActivity {
 
             mSteps = savedInstanceState.getParcelableArrayList(BUNDLE_STEPS);
             mStepPosition = savedInstanceState.getInt(BUNDLE_STEP_POSITION);
+            mRecipeName = savedInstanceState.getString(BUNDLE_RECIPE_NAME);
 
+        }
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(mRecipeName);
         }
 
     }
@@ -69,6 +87,7 @@ public class StepActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(BUNDLE_STEPS, (ArrayList<Step>) mSteps);
         outState.putInt(BUNDLE_STEP_POSITION, mStepPosition);
+        outState.putString(BUNDLE_RECIPE_NAME, mRecipeName);
         super.onSaveInstanceState(outState);
     }
 
