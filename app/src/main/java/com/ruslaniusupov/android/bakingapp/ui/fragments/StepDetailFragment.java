@@ -1,6 +1,8 @@
 package com.ruslaniusupov.android.bakingapp.ui.fragments;
 
 
+import android.app.Dialog;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,8 +13,10 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -30,12 +34,21 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.FileDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSink;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Util;
 import com.ruslaniusupov.android.bakingapp.R;
 import com.ruslaniusupov.android.bakingapp.models.Step;
 
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,15 +57,25 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
 
     private static final String LOG_TAG = StepDetailFragment.class.getSimpleName();
     private static final String BUNDLE_STEP = "step";
+    private static final String BUNDLE_RESUME_POSITION = "resume_position";
+    private static final String BUNDLE_RESUME_WINDOW = "resume_window";
+    private static final String BUNDLE_IS_READY = "is_ready";
     private static final String APP_NAME = "BakingApp";
 
     private Step mStep;
     private SimpleExoPlayer mExoPlayer;
     private MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
+    private String mVideoUrl;
+    private boolean mIsLandLayout;
+    private Dialog mFullScreenDialog;
+    private boolean mIsReady;
+    private int mResumeWindow = C.INDEX_UNSET;
+    private long mResumePosition = C.POSITION_UNSET;
 
     @BindView(R.id.step_description)TextView mStepDescription;
     @BindView(R.id.video_view)PlayerView mPlayerView;
+    @BindView(R.id.video_frame)FrameLayout mVideoFrame;
 
     @Nullable
     @Override
@@ -71,6 +94,9 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        View landView = getActivity().findViewById(R.id.land_layout);
+        mIsLandLayout = landView != null && landView.getVisibility() == View.VISIBLE;
+
         if (savedInstanceState == null) {
 
             if (getArguments().containsKey(BUNDLE_STEP)) {
@@ -84,6 +110,9 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         } else {
 
             mStep = savedInstanceState.getParcelable(BUNDLE_STEP);
+            mResumePosition = savedInstanceState.getLong(BUNDLE_RESUME_POSITION);
+            mResumeWindow = savedInstanceState.getInt(BUNDLE_RESUME_WINDOW);
+            mIsReady = savedInstanceState.getBoolean(BUNDLE_IS_READY);
 
             showContent(mStep);
 
@@ -92,8 +121,34 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        if (Util.SDK_INT > 23) {
+            playVideo();
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (Util.SDK_INT <= 23) {
+            playVideo();
+        }
+
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
+
+        if (mExoPlayer != null) {
+            mResumePosition = Math.max(0, mExoPlayer.getCurrentPosition());
+            mResumeWindow = mExoPlayer.getCurrentWindowIndex();
+            mIsReady = mExoPlayer.getPlayWhenReady();
+        }
 
         if (Util.SDK_INT <= 23) {
             releasePlayer();
@@ -101,6 +156,11 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
                 mMediaSession.setActive(false);
             }
         }
+
+        if (mFullScreenDialog != null) {
+            mFullScreenDialog.dismiss();
+        }
+
     }
 
     @Override
@@ -113,11 +173,15 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
                 mMediaSession.setActive(false);
             }
         }
+
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(BUNDLE_STEP, mStep);
+        outState.putLong(BUNDLE_RESUME_POSITION, mResumePosition);
+        outState.putInt(BUNDLE_RESUME_WINDOW, mResumeWindow);
+        outState.putBoolean(BUNDLE_IS_READY, mIsReady);
         super.onSaveInstanceState(outState);
     }
 
@@ -136,22 +200,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
 
         if (step != null) {
 
-            String videoUrl = step.getVideoUrl();
-
-            if (!TextUtils.isEmpty(videoUrl)) {
-
-                mPlayerView.setVisibility(View.VISIBLE);
-
-                Uri uri = Uri.parse(videoUrl);
-
-                initializeMediaSession();
-                initializePlayer(uri);
-
-            } else {
-
-                mPlayerView.setVisibility(View.GONE);
-
-            }
+            mVideoUrl = step.getVideoUrl();
 
             String description = step.getDescription();
             mStepDescription.setText(description);
@@ -185,26 +234,53 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
 
     private void initializePlayer(Uri videoUri) {
 
-        if (mExoPlayer == null) {
+        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        TrackSelection.Factory trackSelectionFactory =
+                new AdaptiveTrackSelection.Factory(bandwidthMeter);
+        TrackSelector trackSelector = new DefaultTrackSelector(trackSelectionFactory);
 
-            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-            TrackSelection.Factory trackSelectionFactory =
-                    new AdaptiveTrackSelection.Factory(bandwidthMeter);
-            TrackSelector trackSelector = new DefaultTrackSelector(trackSelectionFactory);
+        mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
 
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
+        mExoPlayer.addListener(this);
 
-            mExoPlayer.addListener(this);
+        mPlayerView.setPlayer(mExoPlayer);
 
-            mPlayerView.setPlayer(mExoPlayer);
+        MediaSource videoSource = new ExtractorMediaSource.Factory(new CacheDataSourceFactory(getActivity()))
+                .setExtractorsFactory(new DefaultExtractorsFactory())
+                .createMediaSource(videoUri);
 
-            MediaSource videoSource = new ExtractorMediaSource.Factory(
-                    new DefaultDataSourceFactory(getActivity(), Util.getUserAgent(getActivity(), APP_NAME)))
-                    .setExtractorsFactory(new DefaultExtractorsFactory())
-                    .createMediaSource(videoUri);
+        mExoPlayer.prepare(videoSource);
 
-            mExoPlayer.prepare(videoSource);
+        if (mResumeWindow != C.INDEX_UNSET) {
+            mExoPlayer.seekTo(mResumePosition);
+            mExoPlayer.setPlayWhenReady(mIsReady);
+        } else {
             mExoPlayer.setPlayWhenReady(true);
+        }
+
+    }
+
+    private void playVideo() {
+
+        if (!TextUtils.isEmpty(mVideoUrl)) {
+
+            if (mIsLandLayout) {
+                initFullScreenDialog();
+                openFullScreenDialog();
+            } else {
+                closeFullScreenDialog();
+            }
+
+            mVideoFrame.setVisibility(View.VISIBLE);
+
+            Uri uri = Uri.parse(mVideoUrl);
+
+            initializeMediaSession();
+            initializePlayer(uri);
+
+        } else {
+
+            mVideoFrame.setVisibility(View.GONE);
 
         }
 
@@ -216,6 +292,42 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
+        }
+
+    }
+
+    // Solution from https://geoffledak.com/blog/tag/fullscreen/
+    private void initFullScreenDialog() {
+
+        mFullScreenDialog = new Dialog(getActivity(), android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+
+            @Override
+            public void onBackPressed() {
+                closeFullScreenDialog();
+                super.onBackPressed();
+            }
+        };
+
+    }
+
+    private void openFullScreenDialog() {
+
+        ViewGroup videoFrame = (ViewGroup) mPlayerView.getParent();
+        videoFrame.removeView(mPlayerView);
+        mFullScreenDialog.addContentView(mPlayerView, new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        mFullScreenDialog.show();
+
+    }
+
+    private void closeFullScreenDialog() {
+
+        if (mFullScreenDialog != null) {
+            ViewGroup videoFrame = (ViewGroup) mPlayerView.getParent();
+            videoFrame.removeView(mPlayerView);
+            mVideoFrame.addView(mPlayerView);
+            mFullScreenDialog.dismiss();
         }
 
     }
@@ -301,6 +413,40 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             mExoPlayer.seekTo(0);
         }
 
+        @Override
+        public void onSeekTo(long pos) {
+            mExoPlayer.seekTo(pos);
+        }
+    }
+
+    // Solution from https://stackoverflow.com/questions/28700391/using-cache-in-exoplayer
+    private class CacheDataSourceFactory implements DataSource.Factory {
+
+        private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
+        private static final long MAX_CACHE_SIZE = 100 * 1024 * 1024;
+
+        private final Context mContext;
+        private final DefaultDataSourceFactory mDefaultDataSourceFactory;
+
+        CacheDataSourceFactory(Context context) {
+            super();
+            mContext = context;
+            DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+            String userAgent = Util.getUserAgent(getActivity(), APP_NAME);
+            mDefaultDataSourceFactory = new DefaultDataSourceFactory(mContext, bandwidthMeter,
+                    new DefaultHttpDataSourceFactory(userAgent, bandwidthMeter));
+        }
+
+        @Override
+        public DataSource createDataSource() {
+            LeastRecentlyUsedCacheEvictor evictor = new LeastRecentlyUsedCacheEvictor(MAX_CACHE_SIZE);
+            SimpleCache simpleCache = new SimpleCache(
+                    new File(mContext.getCacheDir(), "media"), evictor);
+            return new CacheDataSource(simpleCache, mDefaultDataSourceFactory.createDataSource(),
+                    new FileDataSource(), new CacheDataSink(simpleCache, MAX_FILE_SIZE),
+                    CacheDataSource.FLAG_BLOCK_ON_CACHE | CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR,
+                    null);
+        }
     }
 
 }

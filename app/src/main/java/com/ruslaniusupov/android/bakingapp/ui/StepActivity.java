@@ -1,11 +1,9 @@
 package com.ruslaniusupov.android.bakingapp.ui;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 import com.ruslaniusupov.android.bakingapp.R;
@@ -81,19 +79,6 @@ public class StepActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(mRecipeName);
-        }
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Hide status bar and action bar in landscape mode
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            View decorView = getWindow().getDecorView();
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-            getSupportActionBar().hide();
         }
 
     }
