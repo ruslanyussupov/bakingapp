@@ -6,6 +6,7 @@
     <dimen name="standard_padding">16dp</dimen>
 
     <dimen name="vertical_margin">16dp</dimen>
+    <dimen name="horizontal_margin">16dp</dimen>
 
     <dimen name="button_margin">16dp</dimen>
 
@@ -21,5 +22,7 @@
     <dimen name="ingredient_item_vertical_padding">8dp</dimen>
 
     <dimen name="detail_container_width">300dp</dimen>
+
+    <dimen name="steps_rv_height">400dp</dimen>
 
 </resources>

@@ -8,13 +8,22 @@
     android:paddingTop="@dimen/recipe_item_vertical_padding"
     android:paddingBottom="@dimen/recipe_item_vertical_padding">
 
+    <ImageView
+        android:id="@+id/recipe_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/recipe_image"
+        tools:src="@drawable/recipe_placeholder"/>
+
     <TextView
         android:id="@+id/name_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:text="@string/default_recipe_name"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipe_image"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 

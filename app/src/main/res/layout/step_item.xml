@@ -8,22 +8,35 @@
     android:paddingTop="@dimen/step_item_vertical_padding"
     android:paddingBottom="@dimen/step_item_vertical_padding">
 
+    <ImageView
+        android:id="@+id/step_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/step_image"
+        tools:src="@drawable/ic_step_placeholder"/>
+
     <TextView
         android:id="@+id/step_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/horizontal_margin"
+        android:layout_marginStart="@dimen/horizontal_margin"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="0."
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintLeft_toRightOf="@id/step_image"
+        app:layout_constraintTop_toTopOf="@id/step_image"
+        app:layout_constraintBottom_toBottomOf="@id/step_image"/>
 
     <TextView
         android:id="@+id/step_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:layout_marginLeft="@dimen/step_item_horizontal_margin"
         android:layout_marginStart="@dimen/step_item_horizontal_margin"
         android:text="@string/default_step_name"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/step_image"
+        app:layout_constraintBottom_toBottomOf="@id/step_image"
         app:layout_constraintLeft_toRightOf="@id/step_number"/>
 
 </android.support.constraint.ConstraintLayout>

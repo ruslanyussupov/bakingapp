@@ -17,7 +17,7 @@
             android:id="@+id/ingredients_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:text="@string/ingredients_label"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -47,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/vertical_margin"
-            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:text="@string/steps_label"
             app:layout_constraintTop_toBottomOf="@id/ingredients_tv"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -56,7 +56,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/steps_rv"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/steps_rv_height"
             app:layout_constraintTop_toBottomOf="@id/steps_label"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
