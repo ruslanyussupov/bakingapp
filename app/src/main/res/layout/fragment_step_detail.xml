@@ -24,21 +24,15 @@
 
     </FrameLayout>
 
-    <ScrollView
+    <TextView
+        android:id="@+id/step_description"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/standard_padding"
         app:layout_constraintTop_toBottomOf="@id/video_frame"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-            <TextView
-                android:id="@+id/step_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="1. Preheat the oven to 350\u00b0F. Butter a 9 deep dish pie pan." />
-
-    </ScrollView>
+        tools:text="1. Preheat the oven to 350\u00b0F. Butter a 9 deep dish pie pan." />
 
 </android.support.constraint.ConstraintLayout>
 
