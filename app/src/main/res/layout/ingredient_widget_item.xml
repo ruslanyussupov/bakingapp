@@ -11,6 +11,11 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/ingredient_item_vertical_padding"
         android:paddingBottom="@dimen/ingredient_item_vertical_padding"
+        android:paddingLeft="@dimen/horizontal_padding"
+        android:paddingStart="@dimen/horizontal_padding"
+        android:paddingRight="@dimen/horizontal_padding"
+        android:paddingEnd="@dimen/horizontal_padding"
+        android:textColor="@android:color/secondary_text_light"
         tools:text="unsalted butter, melted - 6 TBLSP"/>
 
 </FrameLayout>

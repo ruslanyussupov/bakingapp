@@ -99,15 +99,23 @@ public class DbUtils {
                 new String[]{String.valueOf(widgetId)},
                 null);
 
-        if (recipeCursor != null && recipeCursor.moveToFirst()) {
-            recipeName = recipeCursor.getString(recipeCursor.getColumnIndex(
-                    WidgetContract.RecipeEntry.COLUMN_RECIPE_NAME));
-            recipeId = recipeCursor.getInt(recipeCursor.getColumnIndex(
-                    WidgetContract.RecipeEntry.COLUMN_RECIPE_ID));
-            recipeServings = recipeCursor.getInt(recipeCursor.getColumnIndex(
-                    WidgetContract.RecipeEntry.COLUMN_RECIPE_SERVINGS));
+        if (recipeCursor != null) {
 
-            recipeCursor.close();
+            try {
+
+                if (recipeCursor.moveToFirst()) {
+                    recipeName = recipeCursor.getString(recipeCursor.getColumnIndex(
+                            WidgetContract.RecipeEntry.COLUMN_RECIPE_NAME));
+                    recipeId = recipeCursor.getInt(recipeCursor.getColumnIndex(
+                            WidgetContract.RecipeEntry.COLUMN_RECIPE_ID));
+                    recipeServings = recipeCursor.getInt(recipeCursor.getColumnIndex(
+                            WidgetContract.RecipeEntry.COLUMN_RECIPE_SERVINGS));
+                }
+
+            } finally {
+                recipeCursor.close();
+            }
+
         }
 
         return new Recipe(recipeId, recipeName, ingredients, steps, recipeServings, null);
@@ -124,26 +132,34 @@ public class DbUtils {
                 new String[]{String.valueOf(widgetId)},
                 null);
 
-        if (ingredientCursor != null && ingredientCursor.getCount() != 0) {
+        if (ingredientCursor != null) {
 
-            ingredients = new ArrayList<>(ingredientCursor.getCount());
+            try {
 
-            while (ingredientCursor.moveToNext()){
+                if (ingredientCursor.getCount() != 0) {
 
-                String name = ingredientCursor.getString(ingredientCursor.getColumnIndex(
-                        WidgetContract.IngredientEntry.COLUMN_INGREDIENT_NAME));
-                int quantity = ingredientCursor.getInt(ingredientCursor.getColumnIndex(
-                        WidgetContract.IngredientEntry.COLUMN_QUANTITY));
-                String measure = ingredientCursor.getString(ingredientCursor.getColumnIndex(
-                        WidgetContract.IngredientEntry.COLUMN_MEASURE));
+                    ingredients = new ArrayList<>(ingredientCursor.getCount());
 
-                Ingredient ingredient = new Ingredient(quantity, measure, name);
+                    while (ingredientCursor.moveToNext()){
 
-                ingredients.add(ingredient);
+                        String name = ingredientCursor.getString(ingredientCursor.getColumnIndex(
+                                WidgetContract.IngredientEntry.COLUMN_INGREDIENT_NAME));
+                        int quantity = ingredientCursor.getInt(ingredientCursor.getColumnIndex(
+                                WidgetContract.IngredientEntry.COLUMN_QUANTITY));
+                        String measure = ingredientCursor.getString(ingredientCursor.getColumnIndex(
+                                WidgetContract.IngredientEntry.COLUMN_MEASURE));
 
+                        Ingredient ingredient = new Ingredient(quantity, measure, name);
+
+                        ingredients.add(ingredient);
+
+                    }
+
+                }
+
+            } finally {
+                ingredientCursor.close();
             }
-
-            ingredientCursor.close();
 
         }
 
@@ -161,30 +177,38 @@ public class DbUtils {
                 new String[]{String.valueOf(widgetId)},
                 null);
 
-        if (stepCursor != null && stepCursor.getCount() != 0) {
+        if (stepCursor != null) {
 
-            steps = new ArrayList<>(stepCursor.getCount());
+            try {
 
-            while (stepCursor.moveToNext()) {
+                if (stepCursor.getCount() != 0) {
 
-                int id = stepCursor.getInt(stepCursor.getColumnIndex(
-                        WidgetContract.StepEntry.COLUMN_STEP_ID));
-                String shortDescription = stepCursor.getString(stepCursor.getColumnIndex(
-                        WidgetContract.StepEntry.COLUMN_SHORT_DESCRIPTION));
-                String description = stepCursor.getString(stepCursor.getColumnIndex(
-                        WidgetContract.StepEntry.COLUMN_DESCRIPTION));
-                String videoUrl = stepCursor.getString(stepCursor.getColumnIndex(
-                        WidgetContract.StepEntry.COLUMN_VIDEO_URL));
-                String thumbnailUrl = stepCursor.getString(stepCursor.getColumnIndex(
-                        WidgetContract.StepEntry.COLUMN_THUMBNAIL_URL));
+                    steps = new ArrayList<>(stepCursor.getCount());
 
-                Step step = new Step(id, shortDescription, description, videoUrl, thumbnailUrl);
+                    while (stepCursor.moveToNext()) {
 
-                steps.add(step);
+                        int id = stepCursor.getInt(stepCursor.getColumnIndex(
+                                WidgetContract.StepEntry.COLUMN_STEP_ID));
+                        String shortDescription = stepCursor.getString(stepCursor.getColumnIndex(
+                                WidgetContract.StepEntry.COLUMN_SHORT_DESCRIPTION));
+                        String description = stepCursor.getString(stepCursor.getColumnIndex(
+                                WidgetContract.StepEntry.COLUMN_DESCRIPTION));
+                        String videoUrl = stepCursor.getString(stepCursor.getColumnIndex(
+                                WidgetContract.StepEntry.COLUMN_VIDEO_URL));
+                        String thumbnailUrl = stepCursor.getString(stepCursor.getColumnIndex(
+                                WidgetContract.StepEntry.COLUMN_THUMBNAIL_URL));
 
+                        Step step = new Step(id, shortDescription, description, videoUrl, thumbnailUrl);
+
+                        steps.add(step);
+
+                    }
+
+                }
+
+            } finally {
+                stepCursor.close();
             }
-
-            stepCursor.close();
 
         }
 

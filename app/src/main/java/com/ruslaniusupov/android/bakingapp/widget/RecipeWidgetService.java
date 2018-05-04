@@ -53,7 +53,9 @@ public class RecipeWidgetService extends RemoteViewsService {
 
         @Override
         public void onDestroy() {
-            mCursor.close();
+            if (mCursor != null) {
+                mCursor.close();
+            }
         }
 
         @Override
