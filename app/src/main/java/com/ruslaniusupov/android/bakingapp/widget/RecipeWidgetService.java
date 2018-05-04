@@ -21,9 +21,9 @@ public class RecipeWidgetService extends RemoteViewsService {
 
     class RecipeRemoteViewsFactory implements RemoteViewsFactory {
 
-        private int mWidgetId;
+        private final int mWidgetId;
         private Cursor mCursor;
-        Context mContext;
+        private final Context mContext;
 
         RecipeRemoteViewsFactory(Context context, Intent intent) {
             mContext = context;

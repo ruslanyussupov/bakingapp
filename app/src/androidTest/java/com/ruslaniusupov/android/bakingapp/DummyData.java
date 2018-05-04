@@ -7,7 +7,7 @@ import com.ruslaniusupov.android.bakingapp.models.Step;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DummyData {
+class DummyData {
 
     private static List<Ingredient> getIngredients() {
 

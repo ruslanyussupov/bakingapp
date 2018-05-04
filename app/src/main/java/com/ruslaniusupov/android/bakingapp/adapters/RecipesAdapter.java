@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder> {
 
     private List<Recipe> mRecipes;
-    private OnRecipeClickListener mRecipeClickListener;
+    private final OnRecipeClickListener mRecipeClickListener;
 
     public interface OnRecipeClickListener {
         void onRecipeClick(Recipe recipe);
@@ -89,7 +89,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
         @BindView(R.id.num_of_steps)TextView mNumOfStepsTv;
         @BindView(R.id.recipe_image)ImageView mRecipeImage;
 
-        public RecipeViewHolder(View itemView) {
+        RecipeViewHolder(View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);

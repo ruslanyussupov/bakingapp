@@ -12,7 +12,7 @@ import java.util.List;
 
 public class RecipesLoader extends AsyncTaskLoader<List<Recipe>> {
 
-    private String mJsonUrl;
+    private final String mJsonUrl;
     private List<Recipe> mRecipes;
 
     public RecipesLoader(Context context, String jsonUrl) {

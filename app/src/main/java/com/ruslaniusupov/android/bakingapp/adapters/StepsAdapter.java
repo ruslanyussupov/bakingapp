@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHolder> {
 
     private List<Step> mSteps;
-    private OnStepClickListener mStepClickListener;
+    private final OnStepClickListener mStepClickListener;
 
     public interface OnStepClickListener {
         void onStepClick(int position);
@@ -87,7 +87,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHold
         @BindView(R.id.step_number)TextView mStepNumberTv;
         @BindView(R.id.step_image)ImageView mStepImage;
 
-        public StepViewHolder(View itemView) {
+        StepViewHolder(View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);
